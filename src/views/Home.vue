@@ -7,28 +7,13 @@
       </div>
     </header>
     <main class="content">
-      <form>
+      <table class="table">
+        <Row :title="true" />
+        <Row v-for="item in $store.state.currData" :key="item.id" :item="item" />
+      </table>
+      <form id="items-form">
         <table class="table">
-          <tr class="table__row">
-            <td class="table__field-id table__field">ID</td>
-            <td class="table__field-for table__field">Za co</td>
-            <td class="table__field-time table__field">Czas (min)</td>
-            <td class="table__field-rate table__field">Stawka (zł/h)</td>
-            <td class="table__field-info table__field">Dodatkowe informacje</td>
-          </tr>
-
-          <tr class="table__row" v-for="item in currData" :key="item.id">
-            <td class="table__field-id table__field">{{ item.id }}</td>
-            <td class="table__field-for table__field">
-              <input type="text" :value="item.for" readonly />
-            </td>
-            <td class="table__field-time table__field">{{ item.time }} min</td>
-            <td class="table__field-rate table__field">{{ item.rate }} zł/h</td>
-            <td class="table__field-info table__field">
-              <input type="text" :value="item.info ? item.info : 'Brak'" readonly />
-            </td>
-            <td class="table__field-del table__field"></td>
-          </tr>
+          <Row :addNew="true" />
         </table>
       </form>
     </main>
@@ -36,33 +21,19 @@
 </template>
 
 <script>
+import Row from '@/components/Row.vue';
+
 export default {
   name: 'home',
+  components: { Row },
   data() {
-    return {
-      currData: [
-        {
-          id: 1,
-          for: 'Backup - Haier-ac',
-          time: 30,
-          rate: 35,
-          info: undefined
-        },
-        {
-          id: 2,
-          for: 'Intech - Part 5',
-          time: 105,
-          rate: 35,
-          info: 'poprawić to i tamto'
-        }
-      ]
-    };
+    return {};
   },
   computed: {
     amount() {
       let amount = 0;
 
-      this.currData.forEach(el => {
+      this.$store.state.currData.forEach(el => {
         const per15 = el.rate / 4;
         const workTimeCount = Math.ceil(el.time / 15);
         amount += workTimeCount * per15;
@@ -74,17 +45,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-input {
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  border: none;
-  color: white;
-  font-size: 1em;
-  padding: 2px 15px;
-}
-
+<style lang="scss">
 .home {
   display: flex;
   flex-direction: column;
@@ -135,6 +96,10 @@ input {
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   width: calc(100% - 30px);
   height: calc(100vh - 250px);
   background-color: #424242;
