@@ -17,7 +17,7 @@
     <td class="table__field-info table__field">
       <input type="text" :value="item.info ? item.info : 'Brak'" readonly />
     </td>
-    <td class="table__field-del table__field"></td>
+    <td class="table__field-del table__field" @click="handleRemove(item.id)"></td>
   </tr>
 
   <tr class="table__row" v-else-if="addNew">
@@ -61,6 +61,12 @@ export default {
         rate: form.rate.value,
         info: form.info.value,
       });
+    },
+
+    handleRemove(id) {
+      this.$store.state.currData = this.$store.state.currData.filter(
+        el => el.id !== id,
+      );
     },
   },
 };
